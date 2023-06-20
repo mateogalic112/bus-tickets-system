@@ -1,13 +1,19 @@
-import express from "express";
+import {
+  type Request,
+  type Response,
+  type NextFunction,
+  Router,
+} from "express";
 import validationMiddleware from "../middleware/validationMiddleware";
 import { registerUserSchema } from "./auth.validation";
 import { RegisterUserDto } from "./auth.dto";
 import AuthService from "./auth.service";
 import PrismaService from "../services/prismaService";
+import HttpException from "../exceptions/HttpException";
 
 class AuthController {
   readonly path = "/auth";
-  readonly router = express.Router();
+  readonly router = Router();
   private readonly authService: AuthService;
 
   constructor() {
@@ -24,19 +30,22 @@ class AuthController {
   }
 
   private registerUser = async (
-    request: express.Request,
-    response: express.Response
+    request: Request,
+    response: Response,
+    next: NextFunction
   ) => {
     const registerData: RegisterUserDto = request.body;
     try {
       const createdUser = await this.authService.registerUser(registerData);
       if (!createdUser) {
-        return;
+        throw new HttpException(500, "Error while creating user.");
       }
       const token = this.authService.createToken(createdUser);
       response.setHeader("Set-Cookie", [this.authService.createCookie(token)]);
       return response.json(createdUser);
-    } catch (err) {}
+    } catch (err) {
+      next(err);
+    }
   };
 }
 

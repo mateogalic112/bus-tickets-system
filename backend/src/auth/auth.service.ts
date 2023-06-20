@@ -13,16 +13,13 @@ class AuthService {
 
   public registerUser = async (registerData: RegisterUserDto) => {
     const hashedPassword = await bcrypt.hash(registerData.password, 10);
-    try {
-      const createdUser = await this.prisma.user.create({
-        data: {
-          ...registerData,
-          password: hashedPassword,
-        },
-      });
-
-      return createdUser;
-    } catch (error) {}
+    const createdUser = await this.prisma.user.create({
+      data: {
+        ...registerData,
+        password: hashedPassword,
+      },
+    });
+    return createdUser;
   };
 
   public createToken(user: User) {
