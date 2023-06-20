@@ -4,7 +4,8 @@
   "description": "Bus tickets system backend",
   "main": "index.js",
   "scripts": {
-    "dev": "tsc && node build/server.js"
+    "start": "tsc && node build/server.js",
+    "dev": "nodemon src/server.ts"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

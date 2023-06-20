@@ -5,11 +5,11 @@ import {
   Router,
 } from "express";
 import validationMiddleware from "../middleware/validationMiddleware";
-import { registerUserSchema } from "./auth.validation";
-import { RegisterUserDto } from "./auth.dto";
+import { loginUserSchema, registerUserSchema } from "./auth.validation";
+import { LoginUserDto, RegisterUserDto } from "./auth.dto";
 import AuthService from "./auth.service";
 import PrismaService from "../services/prismaService";
-import HttpException from "../exceptions/HttpException";
+import UsersService from "../users/users.service";
 
 class AuthController {
   readonly path = "/auth";
@@ -17,7 +17,10 @@ class AuthController {
   private readonly authService: AuthService;
 
   constructor() {
-    this.authService = new AuthService(PrismaService.getPrisma());
+    this.authService = new AuthService(
+      PrismaService.getPrisma(),
+      new UsersService(PrismaService.getPrisma())
+    );
     this.initializeRoutes();
   }
 
@@ -26,6 +29,12 @@ class AuthController {
       `${this.path}/register`,
       validationMiddleware(registerUserSchema),
       this.registerUser
+    );
+
+    this.router.post(
+      `${this.path}/login`,
+      validationMiddleware(loginUserSchema),
+      this.loginUser
     );
   }
 
@@ -37,12 +46,25 @@ class AuthController {
     const registerData: RegisterUserDto = request.body;
     try {
       const createdUser = await this.authService.registerUser(registerData);
-      if (!createdUser) {
-        throw new HttpException(500, "Error while creating user.");
-      }
       const token = this.authService.createToken(createdUser);
       response.setHeader("Set-Cookie", [this.authService.createCookie(token)]);
       return response.json(createdUser);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  private loginUser = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) => {
+    const loginData: LoginUserDto = request.body;
+    try {
+      const foundUser = await this.authService.loginUser(loginData);
+      const token = this.authService.createToken(foundUser);
+      response.setHeader("Set-Cookie", [this.authService.createCookie(token)]);
+      return response.json(foundUser);
     } catch (err) {
       next(err);
     }
