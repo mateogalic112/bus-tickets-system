@@ -5,22 +5,21 @@ import {
   Router,
 } from "express";
 import validationMiddleware from "../middleware/validationMiddleware";
-import { loginUserSchema, registerUserSchema } from "./auth.validation";
-import { LoginUserDto, RegisterUserDto } from "./auth.dto";
+import {
+  LoginUserDto,
+  RegisterUserDto,
+  loginUserSchema,
+  registerUserSchema,
+} from "./auth.validation";
 import AuthService from "./auth.service";
-import PrismaService from "../services/prismaService";
-import UsersService from "../users/users.service";
 
 class AuthController {
   readonly path = "/auth";
   readonly router = Router();
   private readonly authService: AuthService;
 
-  constructor() {
-    this.authService = new AuthService(
-      PrismaService.getPrisma(),
-      new UsersService(PrismaService.getPrisma())
-    );
+  constructor(authService: AuthService) {
+    this.authService = authService;
     this.initializeRoutes();
   }
 

@@ -24,6 +24,8 @@ export const registerUserSchema = z.object({
   }),
 });
 
+export type RegisterUserDto = z.infer<typeof registerUserSchema>["body"];
+
 export const loginUserSchema = z.object({
   body: z.object({
     email: z
@@ -39,3 +41,5 @@ export const loginUserSchema = z.object({
       .min(3, "Password is too short"),
   }),
 });
+
+export type LoginUserDto = z.infer<typeof loginUserSchema>["body"];

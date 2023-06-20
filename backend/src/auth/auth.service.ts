@@ -1,10 +1,10 @@
 import { PrismaClient, User } from "@prisma/client";
-import { LoginUserDto, RegisterUserDto } from "./auth.dto";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import jwtConfig from "../config/jwt";
 import UsersService from "../users/users.service";
 import HttpException from "../exceptions/HttpException";
+import { LoginUserDto, RegisterUserDto } from "./auth.validation";
 
 class AuthService {
   private readonly prisma: PrismaClient;
