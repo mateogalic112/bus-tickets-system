@@ -16,8 +16,37 @@ model User {
   password  String
   firstName String   @map("first_name")
   lastName  String   @map("last_name")
+  tickets   Ticket[]
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @map("updated_at")
 
   @@map("users")
+}
+
+model Route {
+  id         Int      @id @default(autoincrement())
+  name       String
+  startsAt   DateTime @map("starts_at")
+  endsAt     DateTime @map("ends_at")
+  basePrice  Decimal  @map("base_price")
+  maxTickets Int      @map("max_tickets")
+
+  transporter Transporter
+  tickets     Ticket[]
+}
+
+model Ticket {
+  id    Int     @id @default(autoincrement())
+  price Decimal
+
+  Route   Route? @relation(fields: [routeId], references: [id])
+  routeId Int?
+  User    User?  @relation(fields: [userId], references: [id])
+  userId  Int?
+}
+
+enum Transporter {
+  COAST_TOUR
+  SEA_TRANS
 }
