@@ -35,6 +35,10 @@ class TicketsService {
       throw new HttpException(404, "Ticket not owned.");
     }
 
+    if (foundTicket.isCanceled) {
+      throw new HttpException(400, "Ticket already canceled.");
+    }
+
     if (
       differenceInHours(new Date(foundTicket.Route!.startsAt), new Date()) < 1
     ) {
@@ -97,35 +101,35 @@ class TicketsService {
   };
 
   public createTicket = async (buyTicketDto: BuyTicketDto, userId: number) => {
-    await this.checkCurrentTicketCount(buyTicketDto.routeId);
+    return await this.prisma.$transaction(async (tx) => {
+      const ticketRoute = await this.routesService.getRouteById(
+        buyTicketDto.routeId
+      );
 
-    const createdTicket = await this.prisma.ticket.create({
-      data: {
-        ...buyTicketDto,
-        userId,
-      },
+      const ticketCountForRoute = await tx.ticket.count({
+        where: {
+          routeId: buyTicketDto.routeId,
+          isCanceled: false,
+        },
+      });
+
+      if (ticketRoute.maxTickets < ticketCountForRoute + 1) {
+        throw new HttpException(400, "No tickets left");
+      }
+
+      const createdTicket = await tx.ticket.create({
+        data: {
+          ...buyTicketDto,
+          userId,
+        },
+      });
+
+      if (!createdTicket) {
+        throw new HttpException(500, "Error while creating ticket.");
+      }
+
+      return createdTicket;
     });
-
-    if (!createdTicket) {
-      throw new HttpException(500, "Error while creating ticket.");
-    }
-
-    return createdTicket;
-  };
-
-  private checkCurrentTicketCount = async (routeId: number) => {
-    const ticketRoute = await this.routesService.getRouteById(routeId);
-
-    const ticketCountForRoute = await this.prisma.ticket.count({
-      where: {
-        routeId: routeId,
-        isCanceled: false,
-      },
-    });
-
-    if (ticketRoute.maxTickets <= ticketCountForRoute + 1) {
-      throw new HttpException(400, "No tickets left");
-    }
   };
 }
 
