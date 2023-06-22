@@ -1,6 +1,7 @@
 import { Prisma, PrismaClient, Route } from "@prisma/client";
 import { InfiniteScrollResponse } from "../types/response";
 import { RouteWithTicketCount } from "./routes.dto";
+import HttpException from "../exceptions/HttpException";
 
 class RoutesService {
   private readonly prisma: PrismaClient;
@@ -8,6 +9,16 @@ class RoutesService {
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
+
+  public getRouteById = async (routeId: number) => {
+    const foundRoute = await this.prisma.route.findFirst({
+      where: { id: routeId },
+    });
+    if (!foundRoute) {
+      throw new HttpException(404, "Route not found.");
+    }
+    return foundRoute;
+  };
 
   public getActiveRoutes = async (
     cursor: Prisma.RouteWhereUniqueInput | undefined

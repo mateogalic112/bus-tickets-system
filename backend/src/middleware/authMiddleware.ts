@@ -14,7 +14,7 @@ async function authMiddleware(
   const requestWithUser = request as RequestWithUser;
 
   const cookies = requestWithUser.cookies;
-  if (!cookies && !cookies.Authorization) {
+  if (!cookies?.Authorization) {
     next(new HttpException(403, "No token found!"));
   }
 

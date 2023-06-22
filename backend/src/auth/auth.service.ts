@@ -53,7 +53,7 @@ class AuthService {
   }
 
   public createCookie(token: string) {
-    return `Authorization=${token}; HttpOnly; Max-Age=${jwtConfig.expiresIn}`;
+    return `Authorization=${token}; HttpOnly; Max-Age=${jwtConfig.expiresIn}; Path=/`;
   }
 }
 

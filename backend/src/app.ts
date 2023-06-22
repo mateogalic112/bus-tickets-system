@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import * as dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 import Controller from "./types/controller";
@@ -18,6 +19,7 @@ class App {
   private initializeMiddlewares() {
     this.app.use(cors());
     this.app.use(express.json());
+    this.app.use(cookieParser());
   }
 
   private initializeControllers(controllers: Controller[]) {
