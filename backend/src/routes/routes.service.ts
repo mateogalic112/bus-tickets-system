@@ -23,12 +23,12 @@ class RoutesService {
   public getActiveRoutes = async (
     cursor: Prisma.RouteWhereUniqueInput | undefined
   ): Promise<InfiniteScrollResponse<ActiveRoute>> => {
-    const take = 5;
+    const PER_PAGE = 5;
     const parsedCursor = cursor ? { id: +cursor } : undefined;
     const skip = parsedCursor ? 1 : 0;
 
     const routes = await this.prisma.route.findMany({
-      take,
+      take: PER_PAGE,
       skip,
       cursor: parsedCursor,
       where: {
@@ -55,7 +55,7 @@ class RoutesService {
       ticketCount: route.tickets.length,
     }));
 
-    const lastRoute = routes[take - 1];
+    const lastRoute = routes[PER_PAGE - 1];
     const nextCursor = lastRoute ? { id: lastRoute.id } : null;
     return { items: parsedRoutes, nextCursor };
   };

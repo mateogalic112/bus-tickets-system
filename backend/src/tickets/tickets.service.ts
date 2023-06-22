@@ -16,6 +16,8 @@ class TicketsService {
   }
 
   public cancelTicket = async (userId: number, ticketId: number) => {
+    const ALLOWED_CANCEL_PERIOD_IN_HOURS = 1;
+
     const foundTicket = await this.prisma.ticket.findFirst({
       where: { id: ticketId },
       include: {
@@ -40,7 +42,8 @@ class TicketsService {
     }
 
     if (
-      differenceInHours(new Date(foundTicket.Route!.startsAt), new Date()) < 1
+      differenceInHours(new Date(foundTicket.Route!.startsAt), new Date()) <
+      ALLOWED_CANCEL_PERIOD_IN_HOURS
     ) {
       throw new HttpException(400, "Cancel period has passed.");
     }
@@ -65,12 +68,12 @@ class TicketsService {
     userId: number,
     cursor: Prisma.TicketWhereUniqueInput | undefined
   ): Promise<InfiniteScrollResponse<UserTicket>> => {
-    const take = 5;
+    const PER_PAGE = 5;
     const parsedCursor = cursor ? { id: +cursor } : undefined;
     const skip = parsedCursor ? 1 : 0;
 
     const userTickets = await this.prisma.ticket.findMany({
-      take,
+      take: PER_PAGE,
       skip,
       cursor: parsedCursor,
       where: {
@@ -95,7 +98,7 @@ class TicketsService {
       endsAt: ticket.Route!.endsAt,
     }));
 
-    const lastTicket = userTickets[take - 1];
+    const lastTicket = userTickets[PER_PAGE - 1];
     const nextCursor = lastTicket ? { id: lastTicket.id } : null;
     return { items: parsedUserTickets, nextCursor };
   };

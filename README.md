@@ -21,3 +21,9 @@ docker run -d \
     -e POSTGRES_DB=bus-tickets-db \
     postgres
 ```
+
+### DB seed
+
+```
+npx prisma db seed
+```
