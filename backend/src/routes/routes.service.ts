@@ -40,9 +40,7 @@ class RoutesService {
         startsAt: "asc",
       },
       include: {
-        _count: {
-          select: { tickets: true },
-        },
+        tickets: { where: { isCanceled: false }, select: { id: true } },
       },
     });
 
@@ -54,7 +52,7 @@ class RoutesService {
       endsAt: route.endsAt,
       maxTickets: route.maxTickets,
       transporter: route.transporter,
-      ticketCount: route._count.tickets,
+      ticketCount: route.tickets.length,
     }));
 
     const lastRoute = routes[take - 1];

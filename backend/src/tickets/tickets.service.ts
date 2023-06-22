@@ -119,6 +119,7 @@ class TicketsService {
     const ticketCountForRoute = await this.prisma.ticket.count({
       where: {
         routeId: routeId,
+        isCanceled: false,
       },
     });
 
