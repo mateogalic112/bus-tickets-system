@@ -39,8 +39,9 @@ model Route {
 }
 
 model Ticket {
-  id    Int     @id @default(autoincrement())
-  price Decimal
+  id         Int     @id @default(autoincrement())
+  price      Decimal
+  isCanceled Boolean @default(false) @map("is_canceled")
 
   Route   Route? @relation(fields: [routeId], references: [id])
   routeId Int?

@@ -4,6 +4,7 @@ import HttpException from "../exceptions/HttpException";
 import RoutesService from "../routes/routes.service";
 import { InfiniteScrollResponse } from "../types/response";
 import { UserTicket } from "../types/ticket";
+import { differenceInHours } from "date-fns";
 
 class TicketsService {
   private readonly prisma: PrismaClient;
@@ -13,6 +14,48 @@ class TicketsService {
     this.prisma = prisma;
     this.routesService = routesService;
   }
+
+  public cancelTicket = async (userId: number, ticketId: number) => {
+    const foundTicket = await this.prisma.ticket.findFirst({
+      where: { id: ticketId },
+      include: {
+        Route: {
+          select: {
+            startsAt: true,
+          },
+        },
+      },
+    });
+
+    if (!foundTicket) {
+      throw new HttpException(404, "Ticket not found.");
+    }
+
+    if (foundTicket.userId !== userId) {
+      throw new HttpException(404, "Ticket not owned.");
+    }
+
+    if (
+      differenceInHours(new Date(foundTicket.Route!.startsAt), new Date()) < 1
+    ) {
+      throw new HttpException(400, "Cancel period has passed.");
+    }
+
+    const updateTicket = await this.prisma.ticket.update({
+      where: {
+        id: ticketId,
+      },
+      data: {
+        isCanceled: true,
+      },
+    });
+
+    if (!updateTicket) {
+      throw new HttpException(500, "Ticket cancel update failed.");
+    }
+
+    return updateTicket;
+  };
 
   public getUserTickets = async (
     userId: number,
@@ -28,6 +71,7 @@ class TicketsService {
       cursor: parsedCursor,
       where: {
         userId,
+        isCanceled: false,
       },
       orderBy: {
         id: "asc",

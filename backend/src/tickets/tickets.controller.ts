@@ -29,6 +29,12 @@ class TicketsController {
       validationMiddleware(buyTicketSchema),
       this.buyTicket
     );
+
+    this.router.patch(
+      `${this.path}/:ticketId`,
+      authMiddleware,
+      this.cancelTicket
+    );
   }
 
   private getUserTickets = async (
@@ -65,6 +71,25 @@ class TicketsController {
         user.id
       );
       return response.json(createdTicket);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  private cancelTicket = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) => {
+    const user = request.user as User;
+    const ticketId = parseInt(request.params.ticketId, 10);
+
+    try {
+      const canceledTicket = await this.ticketsService.cancelTicket(
+        user.id,
+        ticketId
+      );
+      return response.json(canceledTicket);
     } catch (err) {
       next(err);
     }
