@@ -27,17 +27,19 @@ class AuthController {
     this.router.post(
       `${this.path}/register`,
       validationMiddleware(registerUserSchema),
-      this.registerUser
+      this.register
     );
 
     this.router.post(
       `${this.path}/login`,
       validationMiddleware(loginUserSchema),
-      this.loginUser
+      this.login
     );
+
+    this.router.post(`${this.path}/logout`, this.logout);
   }
 
-  private registerUser = async (
+  private register = async (
     request: Request,
     response: Response,
     next: NextFunction
@@ -53,7 +55,7 @@ class AuthController {
     }
   };
 
-  private loginUser = async (
+  private login = async (
     request: Request,
     response: Response,
     next: NextFunction
@@ -67,6 +69,11 @@ class AuthController {
     } catch (err) {
       next(err);
     }
+  };
+
+  private logout = (request: Request, response: Response) => {
+    response.setHeader("Set-Cookie", ["Authorization=;Max-age=0"]);
+    response.send(200);
   };
 }
 
