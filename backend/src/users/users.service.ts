@@ -15,6 +15,14 @@ class UsersService {
     }
     return foundUser;
   };
+
+  public getUserById = async (id: number) => {
+    const foundUser = await this.prisma.user.findFirst({ where: { id } });
+    if (!foundUser) {
+      throw new HttpException(404, "User not found.");
+    }
+    return foundUser;
+  };
 }
 
 export default UsersService;
