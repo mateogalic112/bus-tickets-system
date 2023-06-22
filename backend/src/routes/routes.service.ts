@@ -1,7 +1,7 @@
-import { Prisma, PrismaClient, Route } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { InfiniteScrollResponse } from "../types/response";
-import { RouteWithTicketCount } from "./routes.dto";
 import HttpException from "../exceptions/HttpException";
+import { ActiveRoute } from "../types/route";
 
 class RoutesService {
   private readonly prisma: PrismaClient;
@@ -22,7 +22,7 @@ class RoutesService {
 
   public getActiveRoutes = async (
     cursor: Prisma.RouteWhereUniqueInput | undefined
-  ): Promise<InfiniteScrollResponse<RouteWithTicketCount>> => {
+  ): Promise<InfiniteScrollResponse<ActiveRoute>> => {
     const take = 5;
     const parsedCursor = cursor ? { id: +cursor } : undefined;
     const skip = parsedCursor ? 1 : 0;
@@ -47,7 +47,13 @@ class RoutesService {
     });
 
     const parsedRoutes = routes.map((route) => ({
-      ...route,
+      id: route.id,
+      basePrice: route.basePrice,
+      name: route.name,
+      startsAt: route.startsAt,
+      endsAt: route.endsAt,
+      maxTickets: route.maxTickets,
+      transporter: route.transporter,
       ticketCount: route._count.tickets,
     }));
 
