@@ -8,7 +8,7 @@ import validationMiddleware from "../middleware/validationMiddleware";
 import TicketsService from "./tickets.service";
 import { BuyTicketDto, buyTicketSchema } from "./tickets.validation";
 import authMiddleware from "../middleware/authMiddleware";
-import { User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 
 class TicketsController {
   readonly path = "/tickets";
@@ -21,6 +21,8 @@ class TicketsController {
   }
 
   public initializeRoutes() {
+    this.router.get(`${this.path}/me`, authMiddleware, this.getUserTickets);
+
     this.router.post(
       `${this.path}`,
       authMiddleware,
@@ -28,6 +30,27 @@ class TicketsController {
       this.buyTicket
     );
   }
+
+  private getUserTickets = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) => {
+    const user = request.user as User;
+
+    const params = request.query as unknown as {
+      cursor: Prisma.TicketWhereUniqueInput | undefined;
+    };
+    try {
+      const userTickets = await this.ticketsService.getUserTickets(
+        user.id,
+        params.cursor
+      );
+      return response.json(userTickets);
+    } catch (err) {
+      next(err);
+    }
+  };
 
   private buyTicket = async (
     request: Request,
