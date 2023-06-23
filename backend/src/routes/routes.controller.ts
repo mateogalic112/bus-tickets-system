@@ -30,10 +30,10 @@ class RoutesController {
       const params = request.query as unknown as {
         cursor: Prisma.RouteWhereUniqueInput | undefined;
       };
-      const searchedProperties = await this.routesService.getActiveRoutes(
+      const activeRoutes = await this.routesService.getActiveRoutes(
         params.cursor
       );
-      return response.json(searchedProperties);
+      return response.json(activeRoutes);
     } catch (err) {
       next(err);
     }
