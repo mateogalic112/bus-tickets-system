@@ -49,7 +49,7 @@ class AuthController {
     try {
       const createdUser = await this.authService.registerUser(registerData);
       const token = this.authService.createToken(createdUser);
-      response.setHeader("Set-Cookie", [this.authService.createCookie(token)]);
+      response.cookie("Authorization", token, tokenCookieOptions);
       return response.json(createdUser);
     } catch (err) {
       next(err);
