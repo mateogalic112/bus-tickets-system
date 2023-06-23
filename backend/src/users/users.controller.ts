@@ -12,8 +12,8 @@ class UsersController {
   readonly router = Router();
   private readonly usersService: UsersService;
 
-  constructor(routesService: UsersService) {
-    this.usersService = routesService;
+  constructor(usersService: UsersService) {
+    this.usersService = usersService;
     this.initializeRoutes();
   }
 
