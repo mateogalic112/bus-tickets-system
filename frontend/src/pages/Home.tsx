@@ -1,17 +1,22 @@
 import { useGetActiveRoutes } from "../api/routes/useGetActiveRoutes";
 import { format } from "date-fns";
+import { useGetCurrentUser } from "../api/users/useGetCurrentUser";
 
 const Home = () => {
-  const { data } = useGetActiveRoutes();
-  console.log({ data });
+  const { data: activeRoutes } = useGetActiveRoutes();
 
-  if (!data) return null;
+  const { data: user } = useGetCurrentUser();
+
+  if (!activeRoutes) return null;
 
   return (
     <ul className="p-8 flex flex-col gap-4">
-      {data.pages.map((page) =>
+      {activeRoutes.pages.map((page) =>
         page.items.map((item) => (
-          <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+          <div
+            key={item.id}
+            className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+          >
             <div className="p-8 px-5">
               <h6 className="text-gray-500 pb-2">{item.transporter}</h6>
               <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
@@ -33,7 +38,7 @@ const Home = () => {
                 </span>
                 {
                   <button
-                    disabled={item.maxTickets - item.ticketCount === 0}
+                    disabled={item.maxTickets - item.ticketCount === 0 || !user}
                     className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-50  disabled:bg-blue-700 "
                   >
                     Buy

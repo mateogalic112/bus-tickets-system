@@ -51,10 +51,6 @@ class AuthService {
       expiresIn: jwtConfig.expiresIn,
     });
   }
-
-  public createCookie(token: string) {
-    return `Authorization=${token}; HttpOnly; Max-Age=${jwtConfig.expiresIn}; Path=/`;
-  }
 }
 
 export default AuthService;

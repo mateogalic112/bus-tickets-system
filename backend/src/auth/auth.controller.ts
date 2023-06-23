@@ -12,6 +12,7 @@ import {
   registerUserSchema,
 } from "./auth.validation";
 import AuthService from "./auth.service";
+import { logoutCookieOptions, tokenCookieOptions } from "./auth.constants";
 
 class AuthController {
   readonly path = "/auth";
@@ -64,15 +65,15 @@ class AuthController {
     try {
       const foundUser = await this.authService.loginUser(loginData);
       const token = this.authService.createToken(foundUser);
-      response.setHeader("Set-Cookie", [this.authService.createCookie(token)]);
+      response.cookie("Authorization", token, tokenCookieOptions);
       return response.json(foundUser);
     } catch (err) {
       next(err);
     }
   };
 
-  private logout = (request: Request, response: Response) => {
-    response.setHeader("Set-Cookie", ["Authorization=;Max-age=0"]);
+  private logout = (_: Request, response: Response) => {
+    response.cookie("Authorization", "", logoutCookieOptions);
     response.send(200);
   };
 }
