@@ -26,7 +26,7 @@ main()
 function createUsers() {
   const createdUsers = [...Array(3).keys()].map((key) => ({
     email: `user${key + 1}@gmail.com`,
-    password: "123",
+    password: "$2b$10$LxodYRxbSXjJqrH/19rEsOdFOO9pAWSBt8.yDnhKoRu0h5WU3ymmy",
     firstName: `User${key + 1}`,
     lastName: `Jr.`,
   }));
