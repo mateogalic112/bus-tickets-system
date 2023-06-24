@@ -122,7 +122,8 @@ class TicketsService {
 
       const createdTicket = await tx.ticket.create({
         data: {
-          ...buyTicketDto,
+          price: buyTicketDto.price,
+          routeId: buyTicketDto.routeId,
           userId,
         },
       });
