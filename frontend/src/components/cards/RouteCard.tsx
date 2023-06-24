@@ -31,7 +31,7 @@ const RouteCard = ({ route }: Props) => {
         </p>
         <div className="flex items-center justify-between">
           <span className="text-3xl font-bold text-gray-900 dark:text-white">
-            ${route.basePrice}
+            ${parseFloat(route.basePrice).toFixed(2)}
           </span>
           <button
             disabled={route.maxTickets - route.ticketCount === 0 || !user}

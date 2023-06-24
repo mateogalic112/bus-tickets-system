@@ -32,7 +32,7 @@ const UserTicketCard = ({ ticket }: Props) => {
 
         <div className="flex items-center justify-between">
           <span className="text-3xl font-bold text-gray-900 dark:text-white">
-            ${ticket.price}
+            ${parseFloat(ticket.price).toFixed(2)}
           </span>
           <button
             disabled={ticket.isCancelled}

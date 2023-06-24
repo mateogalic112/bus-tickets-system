@@ -4,13 +4,13 @@ import Navigation from "./components/Navigation";
 import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { staleTime: Infinity, retry: false } },
+  defaultOptions: { queries: { retry: false } },
 });
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="bg-gray-900 flex justify-center">
+      <div className="bg-gray-900 flex justify-center min-h-screen">
         <div className="w-full max-w-screen-xl">
           <Navigation />
           <Home />

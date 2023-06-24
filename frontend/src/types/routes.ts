@@ -5,7 +5,7 @@ export enum Transporter {
 
 export type ActiveRoute = {
   id: number;
-  basePrice: number;
+  basePrice: string;
   name: string;
   startsAt: Date;
   endsAt: Date;
