@@ -1,13 +1,9 @@
-import { useState } from "react";
 import { useGetCurrentUser } from "../api/users/useGetCurrentUser";
-import LoginModal from "./modals/LoginModal";
-import UserTicketsModal from "./modals/UserTicketsModal";
+import UserTicketsButton from "./buttons/UserTicketsButton";
+import LoginButton from "./buttons/LoginButton";
 
 const Navigation = () => {
-  const { data: user, isLoading } = useGetCurrentUser();
-
-  const [isUserTicketsModalOpen, setIsUserTicketsModalOpen] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const { data: user } = useGetCurrentUser();
 
   return (
     <>
@@ -16,48 +12,17 @@ const Navigation = () => {
           Bus ticket system
         </h1>
         <div className="flex items-center grow">
-          <div className="flex text-sm">
-            {user && (
-              <button
-                onClick={() => setIsUserTicketsModalOpen(true)}
-                className="block lg:inline-block lg:mt-0  text-white mr-4"
-                data-modal-target="user-tickets-modal"
-                data-modal-toggle="user-tickets-modal"
-              >
-                My Tickets
-              </button>
-            )}
-          </div>
+          <div className="flex text-sm">{user && <UserTicketsButton />}</div>
           <div className="ml-auto">
             {user && (
               <div className="flex gap-2">
                 <p className="text-white">{user.email}</p>
               </div>
             )}
-            {!user && (
-              <button
-                data-modal-target="login-modal"
-                data-modal-toggle="login-modal"
-                className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                type="button"
-                onClick={() => setIsLoginModalOpen(true)}
-              >
-                {isLoading ? "Loading..." : "Login"}
-              </button>
-            )}
+            {!user && <LoginButton />}
           </div>
         </div>
       </nav>
-
-      <UserTicketsModal
-        isOpen={isUserTicketsModalOpen}
-        onClose={() => setIsUserTicketsModalOpen(false)}
-      />
-
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-      />
     </>
   );
 };
