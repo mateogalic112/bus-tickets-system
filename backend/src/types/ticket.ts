@@ -6,4 +6,5 @@ export type UserTicket = {
   name: string;
   startsAt: Date;
   endsAt: Date;
+  isCancelled: boolean;
 };

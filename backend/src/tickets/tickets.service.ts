@@ -96,6 +96,7 @@ class TicketsService {
       name: ticket.Route!.name,
       startsAt: ticket.Route!.startsAt,
       endsAt: ticket.Route!.endsAt,
+      isCancelled: ticket.isCanceled,
     }));
 
     const lastTicket = userTickets[PER_PAGE - 1];
@@ -141,6 +142,7 @@ class TicketsService {
         name: ticketRoute!.name,
         startsAt: ticketRoute!.startsAt,
         endsAt: ticketRoute!.endsAt,
+        isCancelled: createdTicket.isCanceled,
       };
     });
   };
