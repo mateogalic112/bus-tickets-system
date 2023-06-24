@@ -63,3 +63,8 @@ yarn install
 ```
 yarn dev
 ```
+
+Login with user credentials
+
+- **Username:** user1@gmail.com
+- **Password:** abb
