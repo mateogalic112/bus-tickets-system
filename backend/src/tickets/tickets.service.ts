@@ -103,7 +103,10 @@ class TicketsService {
     return { items: parsedUserTickets, nextCursor };
   };
 
-  public createTicket = async (buyTicketDto: BuyTicketDto, userId: number) => {
+  public createTicket = async (
+    buyTicketDto: BuyTicketDto,
+    userId: number
+  ): Promise<UserTicket> => {
     return await this.prisma.$transaction(async (tx) => {
       const ticketRoute = await this.routesService.getRouteById(
         buyTicketDto.routeId
@@ -132,7 +135,13 @@ class TicketsService {
         throw new HttpException(500, "Error while creating ticket.");
       }
 
-      return createdTicket;
+      return {
+        id: createdTicket.id,
+        price: createdTicket.price,
+        name: ticketRoute!.name,
+        startsAt: ticketRoute!.startsAt,
+        endsAt: ticketRoute!.endsAt,
+      };
     });
   };
 }
