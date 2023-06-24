@@ -4,7 +4,7 @@ import LoginModal from "./LoginModal";
 import UserTicketsModal from "./UserTicketsModal";
 
 const Navigation = () => {
-  const { data: user } = useGetCurrentUser();
+  const { data: user, isLoading } = useGetCurrentUser();
 
   const [isUserTicketsModalOpen, setIsUserTicketsModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -17,12 +17,14 @@ const Navigation = () => {
         </h1>
         <div className="flex items-center grow">
           <div className="flex text-sm">
-            <button
-              onClick={() => setIsUserTicketsModalOpen(true)}
-              className="block lg:inline-block lg:mt-0  text-white mr-4"
-            >
-              My Tickets
-            </button>
+            {user && (
+              <button
+                onClick={() => setIsUserTicketsModalOpen(true)}
+                className="block lg:inline-block lg:mt-0  text-white mr-4"
+              >
+                My Tickets
+              </button>
+            )}
           </div>
           <div className="ml-auto">
             {user && (
@@ -38,7 +40,7 @@ const Navigation = () => {
                 type="button"
                 onClick={() => setIsLoginModalOpen(true)}
               >
-                Login
+                {isLoading ? "Loading..." : "Login"}
               </button>
             )}
           </div>
