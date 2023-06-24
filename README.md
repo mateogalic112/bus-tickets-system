@@ -10,6 +10,8 @@ You need Node.js and Docker installed on your machine.
 
 ### Backend
 
+Position yourself in **/backend** folder.
+
 1. Install packages
 
 ```
@@ -34,7 +36,27 @@ docker run -d \
 npx prisma db seed
 ```
 
-4. Run backend
+4. Create **.env** file in **/backend** folder and copy/paste content from **.env.example** file.
+
+5. Run backend
+
+```
+yarn dev
+```
+
+### Frontend
+
+Position yourself in **/frontend** folder.
+
+1. Install packages
+
+```
+yarn install
+```
+
+2. Create **.env** file in **/frontend** folder and copy/paste content from **.env.example** file.
+
+3. Run frontend
 
 ```
 yarn dev
