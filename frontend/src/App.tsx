@@ -10,11 +10,13 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="bg-gray-900">
-        <Navigation />
-        <Home />
-        <Toaster />
+      <div className="bg-gray-900 flex justify-center">
+        <div className="w-full max-w-screen-xl">
+          <Navigation />
+          <Home />
+        </div>
       </div>
+      <Toaster />
     </QueryClientProvider>
   );
 }
