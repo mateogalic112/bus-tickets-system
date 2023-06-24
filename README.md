@@ -1,19 +1,19 @@
 # Bus Tickets System
 
-**Frontend** React with Vite and Typescript
+**Frontend** - _React with Vite and Typescript_
 
-**Backend** Express with Typescript, Prisma and Docker
+**Backend** - _Express with Typescript, Prisma and Docker_
 
 ## Running app
 
 You need Node.js and Docker installed on your machine.
 
-## Backend
+### Backend
 
 1. Install packages
 
 ```
-yarn
+yarn install
 ```
 
 2. Starting postgres DB
