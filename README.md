@@ -32,10 +32,10 @@ docker run -d \
     postgres
 ```
 
-4. DB seed
+4. Apply migrations
 
 ```
-npx prisma db seed
+npx prisma migrate dev
 ```
 
 5. Run backend
