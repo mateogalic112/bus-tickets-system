@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useGetCurrentUser } from "../api/users/useGetCurrentUser";
-import LoginModal from "./LoginModal";
-import UserTicketsModal from "./UserTicketsModal";
+import LoginModal from "./modals/LoginModal";
+import UserTicketsModal from "./modals/UserTicketsModal";
 
 const Navigation = () => {
   const { data: user, isLoading } = useGetCurrentUser();

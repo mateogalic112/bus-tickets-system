@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useGetCurrentUser } from "../api/users/useGetCurrentUser";
-import { useBuyTicket } from "../api/tickets/useBuyTicket";
-import { ActiveRoute } from "../types/routes";
+import { useGetCurrentUser } from "../../api/users/useGetCurrentUser";
+import { useBuyTicket } from "../../api/tickets/useBuyTicket";
+import { ActiveRoute } from "../../types/routes";
 
 interface Props {
   isOpen: boolean;

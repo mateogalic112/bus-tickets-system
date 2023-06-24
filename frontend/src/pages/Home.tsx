@@ -1,5 +1,5 @@
 import { useGetActiveRoutes } from "../api/routes/useGetActiveRoutes";
-import RouteCard from "../components/RouteCard";
+import RouteCard from "../components/cards/RouteCard";
 
 const Home = () => {
   const { data: activeRoutes } = useGetActiveRoutes();

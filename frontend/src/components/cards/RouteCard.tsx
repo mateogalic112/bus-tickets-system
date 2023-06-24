@@ -1,7 +1,7 @@
 import { format } from "date-fns";
-import { ActiveRoute } from "../types/routes";
-import { useGetCurrentUser } from "../api/users/useGetCurrentUser";
-import BuyTicketModal from "./BuyTicketModal";
+import { ActiveRoute } from "../../types/routes";
+import { useGetCurrentUser } from "../../api/users/useGetCurrentUser";
+import BuyTicketModal from "../modals/BuyTicketModal";
 import { useState } from "react";
 
 interface Props {

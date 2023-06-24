@@ -1,6 +1,6 @@
 import { format } from "date-fns";
-import { UserTicket } from "../types/tickets";
-import { useCancelTicket } from "../api/tickets/useCancelTicket";
+import { UserTicket } from "../../types/tickets";
+import { useCancelTicket } from "../../api/tickets/useCancelTicket";
 
 interface Props {
   ticket: UserTicket;

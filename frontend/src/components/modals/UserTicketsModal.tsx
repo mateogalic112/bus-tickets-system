@@ -1,5 +1,5 @@
-import { useGetUserTickets } from "../api/tickets/useGetUserTickets";
-import UserTicketCard from "./UserTicketCard";
+import { useGetUserTickets } from "../../api/tickets/useGetUserTickets";
+import UserTicketCard from "../cards/UserTicketCard";
 
 interface Props {
   isOpen: boolean;
