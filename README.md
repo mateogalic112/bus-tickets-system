@@ -18,7 +18,9 @@ Position yourself in **/backend** folder.
 yarn install
 ```
 
-2. Starting postgres DB
+2. Create **.env** file in **/backend** folder and copy/paste content from **.env.example** file.
+
+3. Starting postgres DB
 
 ```
 docker run -d \
@@ -30,13 +32,11 @@ docker run -d \
     postgres
 ```
 
-3. DB seed
+4. DB seed
 
 ```
 npx prisma db seed
 ```
-
-4. Create **.env** file in **/backend** folder and copy/paste content from **.env.example** file.
 
 5. Run backend
 
