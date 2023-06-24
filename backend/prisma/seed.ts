@@ -5,10 +5,13 @@ const prisma = new PrismaClient();
 
 async function main() {
   await prisma.route.deleteMany();
+  await prisma.user.deleteMany();
 
   const createdRoutes = createRoutes();
+  const createdUsers = createUsers();
 
   await prisma.route.createMany({ data: createdRoutes });
+  await prisma.user.createMany({ data: createdUsers });
 }
 
 main()
@@ -19,6 +22,16 @@ main()
     console.error(e);
     await prisma.$disconnect();
   });
+
+function createUsers() {
+  const createdUsers = [...Array(3).keys()].map((key) => ({
+    email: `user${key + 1}@gmail.com`,
+    password: "123",
+    firstName: `User${key + 1}`,
+    lastName: `Jr.`,
+  }));
+  return createdUsers;
+}
 
 function createRoutes() {
   const cities = ["Split", "Zagreb", "Rijeka", "Pula"];
