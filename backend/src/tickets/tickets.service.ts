@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient, Ticket } from "@prisma/client";
 import { BuyTicketDto } from "./tickets.validation";
 import HttpException from "../exceptions/HttpException";
 import RoutesService from "../routes/routes.service";
@@ -15,9 +15,7 @@ class TicketsService {
     this.routesService = routesService;
   }
 
-  public cancelTicket = async (userId: number, ticketId: number) => {
-    const ALLOWED_CANCEL_PERIOD_IN_HOURS = 1;
-
+  private findTicketById = async (ticketId: number) => {
     const foundTicket = await this.prisma.ticket.findFirst({
       where: { id: ticketId },
       include: {
@@ -33,6 +31,32 @@ class TicketsService {
       throw new HttpException(404, "Ticket not found.");
     }
 
+    return foundTicket;
+  };
+
+  private updateTicketById = async (
+    ticketId: number,
+    data: Partial<Ticket>
+  ) => {
+    const updatedTicket = await this.prisma.ticket.update({
+      where: {
+        id: ticketId,
+      },
+      data,
+    });
+
+    if (!updatedTicket) {
+      throw new HttpException(500, "Ticket update failed.");
+    }
+
+    return updatedTicket;
+  };
+
+  public cancelTicket = async (userId: number, ticketId: number) => {
+    const ALLOWED_CANCEL_PERIOD_IN_HOURS = 1;
+
+    const foundTicket = await this.findTicketById(ticketId);
+
     if (foundTicket.userId !== userId) {
       throw new HttpException(404, "Ticket not owned.");
     }
@@ -41,27 +65,24 @@ class TicketsService {
       throw new HttpException(400, "Ticket already canceled.");
     }
 
-    if (
-      differenceInHours(new Date(foundTicket.Route!.startsAt), new Date()) <
-      ALLOWED_CANCEL_PERIOD_IN_HOURS
-    ) {
+    const hoursUntilDepartureStarts = differenceInHours(
+      new Date(foundTicket.Route!.startsAt),
+      new Date()
+    );
+
+    if (hoursUntilDepartureStarts < ALLOWED_CANCEL_PERIOD_IN_HOURS) {
       throw new HttpException(400, "Cancel period has passed.");
     }
 
-    const updateTicket = await this.prisma.ticket.update({
-      where: {
-        id: ticketId,
-      },
-      data: {
-        isCanceled: true,
-      },
+    const updatedTicket = await this.updateTicketById(ticketId, {
+      isCanceled: true,
     });
 
-    if (!updateTicket) {
+    if (!updatedTicket) {
       throw new HttpException(500, "Ticket cancel update failed.");
     }
 
-    return updateTicket;
+    return updatedTicket;
   };
 
   public getUserTickets = async (
