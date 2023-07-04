@@ -43,10 +43,10 @@ class TicketsController {
     next: NextFunction
   ) => {
     const user = request.user as User;
-
     const params = request.query as unknown as {
       cursor: Prisma.TicketWhereUniqueInput | undefined;
     };
+
     try {
       const userTickets = await this.ticketsService.getUserTickets(
         user.id,
@@ -63,8 +63,9 @@ class TicketsController {
     response: Response,
     next: NextFunction
   ) => {
-    const buyTicketData: BuyTicketDto = request.body;
     const user = request.user as User;
+    const buyTicketData: BuyTicketDto = request.body;
+
     try {
       const createdTicket = await this.ticketsService.createTicket(
         buyTicketData,
