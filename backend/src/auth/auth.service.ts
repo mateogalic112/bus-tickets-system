@@ -1,4 +1,4 @@
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import jwtConfig from "../config/jwt";
@@ -7,26 +7,19 @@ import HttpException from "../exceptions/HttpException";
 import { LoginUserDto, RegisterUserDto } from "./auth.validation";
 
 class AuthService {
-  private readonly prisma: PrismaClient;
   private readonly usersService: UsersService;
 
-  constructor(prisma: PrismaClient, usersService: UsersService) {
-    this.prisma = prisma;
+  constructor(usersService: UsersService) {
     this.usersService = usersService;
   }
 
   public registerUser = async (registerData: RegisterUserDto) => {
     const hashedPassword = await bcrypt.hash(registerData.password, 10);
-    const createdUser = await this.prisma.user.create({
-      data: {
-        ...registerData,
-        password: hashedPassword,
-      },
-    });
 
-    if (!createdUser) {
-      throw new HttpException(500, "Error while creating user.");
-    }
+    const createdUser = await this.usersService.createUser({
+      ...registerData,
+      password: hashedPassword,
+    });
 
     return createdUser;
   };
