@@ -10,10 +10,8 @@ import { Prisma } from "@prisma/client";
 class RoutesController {
   readonly path = "/routes";
   readonly router = Router();
-  private readonly routesService: RoutesService;
 
-  constructor(routesService: RoutesService) {
-    this.routesService = routesService;
+  constructor(private readonly routesService: RoutesService) {
     this.initializeRoutes();
   }
 
@@ -26,10 +24,11 @@ class RoutesController {
     response: Response,
     next: NextFunction
   ) => {
+    const params = request.query as unknown as {
+      cursor: Prisma.RouteWhereUniqueInput | undefined;
+    };
+
     try {
-      const params = request.query as unknown as {
-        cursor: Prisma.RouteWhereUniqueInput | undefined;
-      };
       const activeRoutes = await this.routesService.getActiveRoutes(
         params.cursor
       );

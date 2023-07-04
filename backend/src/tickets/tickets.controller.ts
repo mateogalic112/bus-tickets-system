@@ -13,10 +13,8 @@ import { Prisma, User } from "@prisma/client";
 class TicketsController {
   readonly path = "/tickets";
   readonly router = Router();
-  private readonly ticketsService: TicketsService;
 
-  constructor(ticketsService: TicketsService) {
-    this.ticketsService = ticketsService;
+  constructor(private readonly ticketsService: TicketsService) {
     this.initializeRoutes();
   }
 

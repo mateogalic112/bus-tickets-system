@@ -17,10 +17,8 @@ import { logoutCookieOptions, tokenCookieOptions } from "./auth.constants";
 class AuthController {
   readonly path = "/auth";
   readonly router = Router();
-  private readonly authService: AuthService;
 
-  constructor(authService: AuthService) {
-    this.authService = authService;
+  constructor(private readonly authService: AuthService) {
     this.initializeRoutes();
   }
 
@@ -46,6 +44,7 @@ class AuthController {
     next: NextFunction
   ) => {
     const registerData: RegisterUserDto = request.body;
+
     try {
       const createdUser = await this.authService.registerUser(registerData);
       const token = this.authService.createToken(createdUser);
@@ -62,6 +61,7 @@ class AuthController {
     next: NextFunction
   ) => {
     const loginData: LoginUserDto = request.body;
+
     try {
       const foundUser = await this.authService.loginUser(loginData);
       const token = this.authService.createToken(foundUser);

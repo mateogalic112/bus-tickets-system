@@ -10,10 +10,8 @@ import authMiddleware from "../middleware/authMiddleware";
 class UsersController {
   readonly path = "/users";
   readonly router = Router();
-  private readonly usersService: UsersService;
 
-  constructor(usersService: UsersService) {
-    this.usersService = usersService;
+  constructor(private readonly usersService: UsersService) {
     this.initializeRoutes();
   }
 
@@ -29,6 +27,7 @@ class UsersController {
     try {
       const userId = request.user!.id;
       const currentUser = await this.usersService.getUserById(userId);
+
       return response.json(currentUser);
     } catch (err) {
       next(err);

@@ -3,11 +3,7 @@ import HttpException from "../exceptions/HttpException";
 import { RegisterUserDto } from "../auth/auth.validation";
 
 class UsersService {
-  private readonly prisma: PrismaClient;
-
-  constructor(prisma: PrismaClient) {
-    this.prisma = prisma;
-  }
+  constructor(private readonly prisma: PrismaClient) {}
 
   public createUser = async (registerData: RegisterUserDto) => {
     const createdUser = await this.prisma.user.create({
@@ -25,17 +21,21 @@ class UsersService {
 
   public getUserByEmail = async (email: string) => {
     const foundUser = await this.prisma.user.findFirst({ where: { email } });
+
     if (!foundUser) {
       throw new HttpException(404, "User not found.");
     }
+
     return foundUser;
   };
 
   public getUserById = async (id: number) => {
     const foundUser = await this.prisma.user.findFirst({ where: { id } });
+
     if (!foundUser) {
       throw new HttpException(404, "User not found.");
     }
+
     return foundUser;
   };
 }

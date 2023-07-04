@@ -7,11 +7,7 @@ import HttpException from "../exceptions/HttpException";
 import { LoginUserDto, RegisterUserDto } from "./auth.validation";
 
 class AuthService {
-  private readonly usersService: UsersService;
-
-  constructor(usersService: UsersService) {
-    this.usersService = usersService;
-  }
+  constructor(private readonly usersService: UsersService) {}
 
   public registerUser = async (registerData: RegisterUserDto) => {
     const hashedPassword = await bcrypt.hash(registerData.password, 10);
