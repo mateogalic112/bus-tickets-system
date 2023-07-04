@@ -1,25 +1,19 @@
 import { Prisma } from "@prisma/client";
 import { BuyTicketDto } from "./tickets.validation";
 import HttpException from "../exceptions/HttpException";
-import RoutesService from "../routes/routes.service";
 import { InfiniteScrollResponse } from "../types/response";
 import { differenceInHours } from "date-fns";
 import TicketsRepository from "./tickets.repository";
 import { RESULTS_PER_PAGE } from "./tickets.constants";
 import { constructUserTicketFrom, parseUserTicket } from "./tickets.utils";
 import { UserTicket } from "./tickets.types";
+import RoutesRepository from "../routes/routes.repository";
 
 class TicketsService {
-  private readonly ticketsRepository: TicketsRepository;
-  private readonly routesService: RoutesService;
-
   constructor(
-    ticketsRepository: TicketsRepository,
-    routesService: RoutesService
-  ) {
-    this.ticketsRepository = ticketsRepository;
-    this.routesService = routesService;
-  }
+    private readonly ticketsRepository: TicketsRepository,
+    private readonly routesRepository: RoutesRepository
+  ) {}
 
   public cancelTicket = async (userId: number, ticketId: number) => {
     const ALLOWED_CANCEL_PERIOD_IN_HOURS = 1;
@@ -78,7 +72,7 @@ class TicketsService {
     buyTicketDto: BuyTicketDto,
     userId: number
   ): Promise<UserTicket> => {
-    const ticketRoute = await this.routesService.getRouteById(
+    const ticketRoute = await this.routesRepository.getRouteById(
       buyTicketDto.routeId
     );
 

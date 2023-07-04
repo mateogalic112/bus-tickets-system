@@ -1,4 +1,10 @@
-import { Prisma, Transporter } from "@prisma/client";
+import { Prisma, Transporter, Route } from "@prisma/client";
+
+export type RawActiveRoute = Route & {
+  tickets: {
+    id: number;
+  }[];
+};
 
 export type ActiveRoute = {
   id: number;
