@@ -31,7 +31,7 @@ class TicketsController {
     );
 
     this.router.patch(
-      `${this.path}/cancel/:ticketId`,
+      `${this.path}/:ticketId/cancel`,
       authMiddleware,
       this.cancelTicket
     );
