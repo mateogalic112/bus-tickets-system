@@ -28,7 +28,7 @@ class UsersController {
   ) => {
     try {
       const userId = request.user!.id;
-      const currentUser = await this.usersService.getCurrentUser(userId);
+      const currentUser = await this.usersService.getUserById(userId);
       return response.json(currentUser);
     } catch (err) {
       next(err);
