@@ -15,6 +15,7 @@ const Home = () => {
   };
 
   if (!activeRoutes) return null;
+
   return (
     <div className="p-8 flex flex-col gap-4">
       {activeRoutes.pages.map((page) =>
