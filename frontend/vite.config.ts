@@ -9,4 +9,4 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: "./tests/setup.js",
   },
-} as any);
+} as unknown);
