@@ -7,10 +7,18 @@ import { useGetActiveRoutes } from "../api/routes/useGetActiveRoutes";
 import { addHours } from "date-fns";
 import { Transporter } from "../types/routes";
 
-const mockedUseGetActiveRoutes = useGetActiveRoutes as jest.Mock<any>;
+const mockedUseGetActiveRoutes = useGetActiveRoutes as jest.Mock;
 jest.mock("../api/routes/useGetActiveRoutes");
 
 describe("User NOT logged in homepage display", () => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+
   beforeEach(() => {
     mockedUseGetActiveRoutes.mockImplementation(() => ({
       isLoading: true,
@@ -23,14 +31,6 @@ describe("User NOT logged in homepage display", () => {
   });
 
   test("Guest user should see all tickets displayed", async () => {
-    const queryClient = new QueryClient({
-      defaultOptions: { queries: { retry: false } },
-    });
-
-    const wrapper = ({ children }: { children: ReactNode }) => (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    );
-
     mockedUseGetActiveRoutes.mockImplementation(() => ({
       isLoading: false,
       data: { pages: [{ items: mockedActiveRoutes }] },
@@ -43,6 +43,11 @@ describe("User NOT logged in homepage display", () => {
 
     expect(firstItemTitle).toBeInTheDocument();
     expect(secondItemTitle).toBeInTheDocument();
+
+    const buyButton = screen.getAllByRole("button", {
+      name: /buy/i,
+    })[0];
+    expect(buyButton).toBeDisabled();
   });
 });
 
