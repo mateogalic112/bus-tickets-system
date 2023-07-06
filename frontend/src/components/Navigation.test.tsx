@@ -3,10 +3,10 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import Navigation from "./Navigation";
 import { render, screen } from "@testing-library/react";
 import { useGetCurrentUser } from "../api/users/useGetCurrentUser";
-import "@testing-library/jest-dom";
+import { afterEach, beforeEach, describe, vi, Mock, it } from "vitest";
 
-const mockedUseGetCurrentUser = useGetCurrentUser as jest.Mock;
-jest.mock("../api/users/useGetCurrentUser");
+const mockedUseGetCurrentUser = useGetCurrentUser as Mock;
+vi.mock("../api/users/useGetCurrentUser");
 
 describe("Navigation component", () => {
   const queryClient = new QueryClient({
@@ -25,10 +25,10 @@ describe("Navigation component", () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
-  test("Should display user email if user is logged in", async () => {
+  it("Should display user email if user is logged in", async () => {
     mockedUseGetCurrentUser.mockImplementation(() => ({
       isLoading: false,
       data: loggedInUser,
@@ -45,7 +45,7 @@ describe("Navigation component", () => {
     expect(myTicketsButton).toBeInTheDocument();
   });
 
-  test("Should display login button if user is NOT logged in", async () => {
+  it("Should display login button if user is NOT logged in", async () => {
     mockedUseGetCurrentUser.mockImplementation(() => ({
       isLoading: false,
       data: undefined,

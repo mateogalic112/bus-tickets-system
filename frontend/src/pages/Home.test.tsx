@@ -1,14 +1,14 @@
 import { render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import Home from "./Home";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactNode } from "react";
 import { useGetActiveRoutes } from "../api/routes/useGetActiveRoutes";
 import { addHours } from "date-fns";
 import { Transporter } from "../types/routes";
+import { afterEach, beforeEach, describe, vi, Mock, it } from "vitest";
 
-const mockedUseGetActiveRoutes = useGetActiveRoutes as jest.Mock;
-jest.mock("../api/routes/useGetActiveRoutes");
+const mockedUseGetActiveRoutes = useGetActiveRoutes as Mock;
+vi.mock("../api/routes/useGetActiveRoutes");
 
 describe("User NOT logged in homepage display", () => {
   const queryClient = new QueryClient({
@@ -27,10 +27,10 @@ describe("User NOT logged in homepage display", () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
-  test("Guest user should see all tickets displayed", async () => {
+  it("Guest user should see all tickets displayed", async () => {
     mockedUseGetActiveRoutes.mockImplementation(() => ({
       isLoading: false,
       data: { pages: [{ items: mockedActiveRoutes }] },
