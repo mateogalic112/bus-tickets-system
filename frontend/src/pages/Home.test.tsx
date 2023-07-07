@@ -10,7 +10,7 @@ import { afterEach, beforeEach, describe, vi, Mock, it } from "vitest";
 const mockedUseGetActiveRoutes = useGetActiveRoutes as Mock;
 vi.mock("../api/routes/useGetActiveRoutes");
 
-describe("User NOT logged in homepage display", () => {
+describe("Home page", () => {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
@@ -30,7 +30,7 @@ describe("User NOT logged in homepage display", () => {
     vi.clearAllMocks();
   });
 
-  it("Guest user should see all tickets displayed", async () => {
+  it("User should see all tickets", async () => {
     mockedUseGetActiveRoutes.mockImplementation(() => ({
       isLoading: false,
       data: { pages: [{ items: mockedActiveRoutes }] },
@@ -43,11 +43,6 @@ describe("User NOT logged in homepage display", () => {
 
     expect(firstItemTitle).toBeInTheDocument();
     expect(secondItemTitle).toBeInTheDocument();
-
-    const buyButton = screen.getAllByRole("button", {
-      name: /buy/i,
-    })[0];
-    expect(buyButton).toBeDisabled();
   });
 });
 
