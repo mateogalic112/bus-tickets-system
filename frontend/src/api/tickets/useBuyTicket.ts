@@ -24,7 +24,12 @@ export const useBuyTicket = () => {
       queryClient.invalidateQueries([ROUTES_QUERY_KEYS.ROUTES]);
       queryClient.invalidateQueries(ticketKeys.userTickets());
 
-      toast.success(`Ticket #${data.id} bought for $${data.price}`);
+      toast.success(
+        `Ticket #${data.id} bought for $${parseFloat(data.price).toFixed(2)}`,
+        {
+          duration: 100000,
+        }
+      );
     },
     onError: (e: AxiosError) => {
       const safeError = e?.response?.data as {

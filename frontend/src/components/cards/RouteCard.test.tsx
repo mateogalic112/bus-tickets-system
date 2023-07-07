@@ -10,7 +10,7 @@ import { addHours } from "date-fns";
 const mockedUseGetCurrentUser = useGetCurrentUser as Mock;
 vi.mock("../../api/users/useGetCurrentUser");
 
-describe("Route card component", () => {
+describe("Route card", () => {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
